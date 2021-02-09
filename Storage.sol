@@ -77,18 +77,18 @@ interface transferable {
     constructor(address _owner, uint _minimumAmmount) { 
         owner = _owner;
         minimumAmmount = _minimumAmmount;
-        usdt = 0xdac17f958d2ee523a2206206994597c13d831ec7;
-        usdc = 0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48;
-        tusd = 0x0000000000085d4780B73119b644AE5ecd22b376;
-        usdn = 0x674C6Ad92Fd080e4004b2312b45f796a192D27a0;
-        busd = 0x4fabb145d64652a948d72533023f6e7a623c7c53;
-        husd = 0xdf574c24545e5ffecb9a659c229253d4111d87e1;
-        dai  = 0x6b175474e89094c44da98b954eedeac495271d0f;
-        susd = 0x57ab1ec28d129707052df4df418d58a2d46d5f51;
-        usdk = 0x1c48f86ae57291f7686349f12601910bd8d470bb;
-        ust  = 0xa47c8bf37f92abed4a126bda807a7b7498661acd;
-        musd = 0xe2f2a5c287993345a840db3b0845fbc70f5935a5;
-        gusd = 0x056fd409e1d7a124bd7017459dfea2f387b6d5cd;
+        usdt = IERC20(0xdac17f958d2ee523a2206206994597c13d831ec7);
+        usdc = IERC20(0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48);
+        tusd = IERC20(0x0000000000085d4780B73119b644AE5ecd22b376);
+        usdn = IERC20(0x674C6Ad92Fd080e4004b2312b45f796a192D27a0);
+        busd = IERC20(0x4fabb145d64652a948d72533023f6e7a623c7c53);
+        husd = IERC20(0xdf574c24545e5ffecb9a659c229253d4111d87e1);
+        dai  = IERC20(0x6b175474e89094c44da98b954eedeac495271d0f);
+        susd = IERC20(0x57ab1ec28d129707052df4df418d58a2d46d5f51);
+        usdk = IERC20(0x1c48f86ae57291f7686349f12601910bd8d470bb);
+        ust  = IERC20(0xa47c8bf37f92abed4a126bda807a7b7498661acd);
+        musd = IERC20(0xe2f2a5c287993345a840db3b0845fbc70f5935a5);
+        gusd = IERC20(0x056fd409e1d7a124bd7017459dfea2f387b6d5cd);
         
     }
     
@@ -353,6 +353,7 @@ interface transferable {
         gusdSupply -= ammount;
         totalSupply -= ammount;
     }
+    
  }
  
 
