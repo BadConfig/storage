@@ -1,19 +1,19 @@
 # Treasury
 ## usage:
-* add<Token>(address, ammount) adds tokens to account trying transfer from
-* take<Token>(address, ammount) tries to take tokens to the address from account
-### <Token> can be (capital letter required):
-    1. Usdt
-    2. Usdc
-    3. Tusd
-    4. Usdn
-    5. Busd
-    6. Husd
-    7. Dai
-    8. Susd
-    9. Usdk
-    10. Ust
-    11. Musd
-    12. Gusd
+* deposit(address, ammount, token) adds tokens to account trying transfer from
+* withdraw(address, ammount, token) tries to take tokens to the address from account
+### token - integer field one of:
+    1.  Usdt: 0
+    2.  Usdc: 1
+    3.  Tusd: 2
+    4.  Usdn: 3
+    5.  Busd: 4
+    6.  Husd: 5
+    7.  Dai:  6
+    8.  Susd: 7
+    9.  Usdk: 8
+    10. Ust:  9
+    11. Musd: 10
+    12. Gusd: 11
 
 

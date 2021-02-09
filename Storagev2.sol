@@ -20,14 +20,14 @@ import "https://github.com/OpenZeppelin/openzeppelin-contracts/blob/v3.0.0/contr
     }
     mapping (TokenType => address) public tokenAddress;
     mapping (TokenType => mapping ( address => uint )) public impact;
-    mapping (TokenType => uint) public tokenAmmount;
+    mapping (TokenType => uint) public tokenAmount;
     address public owner;
-    uint public minimumAmmount;
+    uint public minimumAmount;
     uint256 public totalSupply;
     
-    constructor(address _owner, uint _minimumAmmount) public { 
+    constructor(address _owner, uint _minimumAmount) public { 
         owner = _owner;
-        minimumAmmount = _minimumAmmount;
+        minimumAmount = _minimumAmount;
         tokenAddress[TokenType.usdt] = address(0xdAC17F958D2ee523a2206206994597C13D831ec7);
         tokenAddress[TokenType.usdc] = address(0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48);
         tokenAddress[TokenType.tusd] = address(0x0000000000085d4780B73119b644AE5ecd22b376);
@@ -52,20 +52,24 @@ import "https://github.com/OpenZeppelin/openzeppelin-contracts/blob/v3.0.0/contr
         owner = newOwner;
     }
 
-    function addToken(address from, uint ammount, TokenType t) public {
-        require(ammount >= minimumAmmount, "Too low ammount");
-        require(IERC20(tokenAddress[t]).allowance(from,address(this)) >= ammount, "Not enough tokens");
-        IERC20(tokenAddress[t]).transferFrom(from,address(this),ammount);
-        impact[t][from] += ammount;
-        tokenAmmount[t] += ammount;
-        totalSupply += ammount;
+    function deposit(address from, uint amount, uint tokenInt) public {
+        require(tokenInt < 12,"Not a valid token integer passed");
+        TokenType t = TokenType(tokenInt);
+        require(amount >= minimumAmount, "Too low amount");
+        require(IERC20(tokenAddress[t]).allowance(from,address(this)) >= amount, "Not enough tokens");
+        IERC20(tokenAddress[t]).transferFrom(from,address(this),amount);
+        impact[t][from] += amount;
+        tokenAmount[t] += amount;
+        totalSupply += amount;
     }
     
-    function takeToken(address to, uint ammount, TokenType t) OnlyOwner public {
-        require(tokenAmmount[t] >= ammount, "Too low ammount");
-        IERC20(tokenAddress[t]).approve(to,ammount);
-        tokenAmmount[t] += ammount;
-        totalSupply -= ammount;
+    function withdraw(address to, uint amount, uint tokenInt) OnlyOwner public {
+        require(tokenInt < 12,"Not a valid token integer passed");
+        TokenType t = TokenType(tokenInt);
+        require(tokenAmount[t] >= amount, "Too low amount");
+        IERC20(tokenAddress[t]).approve(to,amount);
+        tokenAmount[t] -= amount;
+        totalSupply -= amount;
     }
 
  }
