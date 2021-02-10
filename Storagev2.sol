@@ -12,25 +12,30 @@ import "https://github.com/OpenZeppelin/openzeppelin-contracts/blob/v3.0.0/contr
     uint public minimumAmount;
     uint256 public totalSupply;
     
-    constructor(address _owner, uint _minimumAmount) public { 
+    constructor(address _owner, uint _minimumAmount, address[] memory _bindedTokensAddr) public { 
         owner = _owner;
         minimumAmount = _minimumAmount;
-        // optionaly bindedTokensAddr = _bindedTokensAddr;
-        bindedTokensAddr.push(address(0xdAC17F958D2ee523a2206206994597C13D831ec7));
-        bindedTokensAddr.push(address(0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48));
-        bindedTokensAddr.push(address(0x0000000000085d4780B73119b644AE5ecd22b376));
-        bindedTokensAddr.push(address(0x674C6Ad92Fd080e4004b2312b45f796a192D27a0));
-        bindedTokensAddr.push(address(0x4Fabb145d64652a948d72533023f6E7A623C7C53));
-        bindedTokensAddr.push(address(0xdF574c24545E5FfEcb9a659c229253D4111d87e1));
-        bindedTokensAddr.push(address(0x6B175474E89094C44Da98b954EedeAC495271d0F));
-        bindedTokensAddr.push(address(0x57Ab1ec28D129707052df4dF418D58a2D46d5f51));
-        bindedTokensAddr.push(address(0x1c48f86ae57291F7686349F12601910BD8D470bb));
-        bindedTokensAddr.push(address(0xa47c8bf37f92aBed4A126BDA807A7b7498661acD));
-        bindedTokensAddr.push(address(0xe2f2a5C287993345a840Db3B0845fbC70f5935a5));
-        bindedTokensAddr.push(address(0x056Fd409E1d7A124BD7017459dFEa2F387b6d5Cd));
+        bindedTokensAddr = _bindedTokensAddr;
+        // bindedTokensAddr.push(address(0xdAC17F958D2ee523a2206206994597C13D831ec7));
+        // bindedTokensAddr.push(address(0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48));
+        // bindedTokensAddr.push(address(0x0000000000085d4780B73119b644AE5ecd22b376));
+        // bindedTokensAddr.push(address(0x674C6Ad92Fd080e4004b2312b45f796a192D27a0));
+        // bindedTokensAddr.push(address(0x4Fabb145d64652a948d72533023f6E7A623C7C53));
+        // bindedTokensAddr.push(address(0xdF574c24545E5FfEcb9a659c229253D4111d87e1));
+        // bindedTokensAddr.push(address(0x6B175474E89094C44Da98b954EedeAC495271d0F));
+        // bindedTokensAddr.push(address(0x57Ab1ec28D129707052df4dF418D58a2D46d5f51));
+        // bindedTokensAddr.push(address(0x1c48f86ae57291F7686349F12601910BD8D470bb));
+        // bindedTokensAddr.push(address(0xa47c8bf37f92aBed4A126BDA807A7b7498661acD));
+        // bindedTokensAddr.push(address(0xe2f2a5C287993345a840Db3B0845fbC70f5935a5));
+        // bindedTokensAddr.push(address(0x056Fd409E1d7A124BD7017459dFEa2F387b6d5Cd));
         for (uint i = 0; i < bindedTokensAddr.length; ++i) {
             bindedTokens[bindedTokensAddr[i]] = true;
         }
+    }
+    
+    function bindNewToken(address newTokenAddress) OnlyOwner public {
+        bindedTokensAddr.push(newTokenAddress);
+        bindedTokens[newTokenAddress] = true;
     }
     
     modifier OnlyOwner() {
