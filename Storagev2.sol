@@ -51,6 +51,30 @@ import "https://github.com/OpenZeppelin/openzeppelin-contracts/blob/v3.0.0/contr
     function transferOnwership(address newOwner) OnlyOwner public {
         owner = newOwner;
     }
+    
+    function totalSupplyOf(address user) public returns (uint) {
+        uint totalImpact;
+        totalImpact += impact[TokenType.usdt][user];
+        totalImpact += impact[TokenType.usdc][user];
+        totalImpact += impact[TokenType.tusd][user];
+        totalImpact += impact[TokenType.usdn][user];
+        totalImpact += impact[TokenType.busd][user];
+        totalImpact += impact[TokenType.husd][user];
+        totalImpact += impact[TokenType.dai][user];
+        totalImpact += impact[TokenType.susd][user];
+        totalImpact += impact[TokenType.usdk][user];
+        totalImpact += impact[TokenType.ust][user];
+        totalImpact += impact[TokenType.musd][user];
+        totalImpact += impact[TokenType.gusd][user];
+        return totalImpact;
+    }
+    
+    function totalImpactOf(address user, uint precision) public returns (uint) {
+        uint supply = totalSupplyOf(user);
+        uint _supply = supply * 10 ** (precision + 1);
+        return (((_supply/totalSupply)+5)/10);
+    }
+    
 
     function deposit(address from, uint amount, uint tokenInt) public {
         require(tokenInt < 12,"Not a valid token integer passed");
