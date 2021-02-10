@@ -6,16 +6,16 @@ import "https://github.com/OpenZeppelin/openzeppelin-contracts/blob/v3.0.0/contr
      
     mapping (address => mapping ( address => uint )) public impact;
     mapping (address => uint) public tokenAmount;
-    mapping (address => bool) public bindedTokens;
-    address[] bindedTokensAddr;
+    mapping (address => bool) public boundTokens;
+    address[] boundTokensAddr;
     address public owner;
     uint public minimumAmount;
     uint256 public totalSupply;
     
-    constructor(address _owner, uint _minimumAmount, address[] memory _bindedTokensAddr) public { 
+    constructor(address _owner, uint _minimumAmount, address[] memory _boundTokensAddr) public { 
         owner = _owner;
         minimumAmount = _minimumAmount;
-        bindedTokensAddr = _bindedTokensAddr;
+        boundTokensAddr = _boundTokensAddr;
         // bindedTokensAddr.push(address(0xdAC17F958D2ee523a2206206994597C13D831ec7));
         // bindedTokensAddr.push(address(0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48));
         // bindedTokensAddr.push(address(0x0000000000085d4780B73119b644AE5ecd22b376));
@@ -28,14 +28,14 @@ import "https://github.com/OpenZeppelin/openzeppelin-contracts/blob/v3.0.0/contr
         // bindedTokensAddr.push(address(0xa47c8bf37f92aBed4A126BDA807A7b7498661acD));
         // bindedTokensAddr.push(address(0xe2f2a5C287993345a840Db3B0845fbC70f5935a5));
         // bindedTokensAddr.push(address(0x056Fd409E1d7A124BD7017459dFEa2F387b6d5Cd));
-        for (uint i = 0; i < bindedTokensAddr.length; ++i) {
-            bindedTokens[bindedTokensAddr[i]] = true;
+        for (uint i = 0; i < boundTokensAddr.length; ++i) {
+            boundTokens[boundTokensAddr[i]] = true;
         }
     }
     
     function bindNewToken(address newTokenAddress) OnlyOwner public {
-        bindedTokensAddr.push(newTokenAddress);
-        bindedTokens[newTokenAddress] = true;
+        boundTokensAddr.push(newTokenAddress);
+        boundTokens[newTokenAddress] = true;
     }
     
     modifier OnlyOwner() {
@@ -49,8 +49,8 @@ import "https://github.com/OpenZeppelin/openzeppelin-contracts/blob/v3.0.0/contr
     
     function totalSupplyOf(address user) public returns (uint) {
         uint totalImpact;
-        for (uint i = 0; i < bindedTokensAddr.length; ++i) {
-            totalImpact += impact[bindedTokensAddr[i]][user];
+        for (uint i = 0; i < boundTokensAddr.length; ++i) {
+            totalImpact += impact[boundTokensAddr[i]][user];
         }
         return totalImpact;
     }
@@ -63,7 +63,7 @@ import "https://github.com/OpenZeppelin/openzeppelin-contracts/blob/v3.0.0/contr
     
 
     function deposit(address from, uint amount, address token) public {
-        require(bindedTokens[token],"Token not binded");
+        require(boundTokens[token],"Token not binded");
         require(amount >= minimumAmount, "Too low amount");
         require(IERC20(token).allowance(from,address(this)) >= amount, "Not enough tokens");
         IERC20(token).transferFrom(from,address(this),amount);
@@ -73,7 +73,7 @@ import "https://github.com/OpenZeppelin/openzeppelin-contracts/blob/v3.0.0/contr
     }
     
     function withdraw(address to, uint amount, address token) OnlyOwner public {
-        require(bindedTokens[token],"Token not binded");
+        require(boundTokens[token],"Token not binded");
         require(tokenAmount[token] >= amount, "Too low amount");
         IERC20(token).approve(to,amount);
         tokenAmount[token] -= amount;
