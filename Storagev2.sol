@@ -7,7 +7,7 @@ import "https://github.com/OpenZeppelin/openzeppelin-contracts/blob/v3.0.0/contr
     mapping (address => mapping ( address => uint )) public impact;
     mapping (address => uint) public tokenAmount;
     mapping (address => bool) public boundTokens;
-    address[] boundTokensAddr;
+    address[] public boundTokensAddr;
     address public owner;
     uint public minimumAmount;
     uint256 public totalSupply;
@@ -81,5 +81,3 @@ import "https://github.com/OpenZeppelin/openzeppelin-contracts/blob/v3.0.0/contr
     }
 
  }
- 
-
