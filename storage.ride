@@ -1,0 +1,117 @@
+{-# STDLIB_VERSION 4 #-}
+{-# CONTENT_TYPE DAPP #-}
+{-# SCRIPT_TYPE ACCOUNT #-}
+
+func getIntegerByKey(key: String) = {
+    match (getInteger(this, key)) {
+        case v:Int => v
+        case _ => 0
+      } 
+}
+
+func getBooleanByKey(key: String) = {
+    match (getBoolean(this, key)) {
+        case v:Boolean => v
+        case _ => false
+      } 
+}
+
+func getStringByKey(key: String) = {
+    match (getString(this, key)) {
+        case v:String => v
+        case _ => ""
+    }
+}
+
+func getLastClaimBlock() = {
+    match (getInteger(this,"LastClaimBlock")) {
+      case v: Int => v
+      case _ => height-1
+    }
+}
+
+let initialBlock = height
+let IMPACT = 0
+let REISSUE = 1
+let assetId = toBytes("asdf")
+let nebulaAddress = addressFromString("nebula addr")
+let a = 163799999999999
+let c = 21000000
+
+func mint(last: Int, new: Int) = {
+    let k = (a/c)+initialBlock
+    a/(last+k) - a/(new+k)
+}
+
+
+func EthAddress(id: String) = "eth_address_" + id 
+func UserImpact(id: String) = "user_impact_" + id
+func ClaimedInBlock(address: Address, blockNum: Int) = "claim_" + toString(address) + "_" + toString(blockNum)
+
+
+
+#--------- ACTIONS OF NEBULA ---------#
+
+@Callable(i)
+func attachData(v: ByteVector, vPulseId: Int) = {
+  if (i.caller != nebulaAddress)
+    then throw("invalid sender")
+  else {
+    let action = toInt(v.take(8))
+  
+    if action == REISSUE then
+      let amount = toInt(v.drop(8).take(8))
+      [
+        Reissue(assetId,amount,true)
+      ]
+    else if action == IMPACT then 
+      let amount = toInt(v.drop(8).take(8))
+      let ethAddress = toBase58String(v.drop(8+8).take(32))
+      let wavesAddress = getStringByKey(EthAddress(ethAddress))
+      if wavesAddress == "" then throw("invalid action")
+      else {
+        let impact = getIntegerByKey(UserImpact(wavesAddress))
+        let ts = getIntegerByKey("USD_total_supply")
+        [
+          IntegerEntry(UserImpact(wavesAddress),impact+amount),
+          IntegerEntry("USD_total_supply",ts+amount)
+        ]
+      }
+    else throw("invalid action")
+  }
+}
+
+#--------- ACTIONS OF USER ---------#
+
+@Callable(i)
+func login(ethAddess: String, wavesAddess: String) = {
+  if getStringByKey(EthAddress(ethAddess)) != "" || 
+    i.caller != addressFromString(wavesAddess)
+    then throw("is defined")
+    else {
+      [
+        StringEntry(EthAddress(ethAddess),wavesAddess)
+      ]
+    }
+}
+
+@Callable(i)
+func claim(ethAddress: String) = {
+    let last = getLastClaimBlock()
+    let mintAmount = if last < height then mint(last,height) else 0
+
+    if addressFromString(getStringByKey(EthAddress(ethAddress))) == i.caller &&
+      getBooleanByKey(ClaimedInBlock(i.caller,height)) != true
+    then
+       let claimTotalSupply = assetBalance(this,assetId) + mintAmount
+       let impact = getIntegerByKey(UserImpact(toString(i.caller)))
+       let ts = getIntegerByKey("USD_total_supply")
+       let claimSupply = claimTotalSupply*impact/ts
+      [ 
+        BooleanEntry(ClaimedInBlock(i.caller,height),true),
+        Reissue(assetId,mintAmount,true),
+        ScriptTransfer(i.caller,claimSupply,assetId)
+      ]
+    else 
+        throw("access error")
+}

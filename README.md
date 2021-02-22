@@ -1,19 +1,16 @@
 # Treasury
 ## usage:
-* deposit(address, ammount, token) adds tokens to account trying transfer from
-* withdraw(address, ammount, token) tries to take tokens to the address from account
-### token - integer field one of:
-    1.  Usdt: 0
-    2.  Usdc: 1
-    3.  Tusd: 2
-    4.  Usdn: 3
-    5.  Busd: 4
-    6.  Husd: 5
-    7.  Dai:  6
-    8.  Susd: 7
-    9.  Usdk: 8
-    10. Ust:  9
-    11. Musd: 10
-    12. Gusd: 11
+* deposit<TokenName>(address, ammount) adds tokens to account trying transfer from
+emits the event of token lock for extractors
+* withdraw<TokenName>(address, ammount) tries to take tokens to the address from LU sc account
+only available for owner of sc
+## TokenName
+can be one of:
+    1. USDC
+    2. USDT
+    3. USDN
+    4. BUSD
+    5. DAI
+
 
 
