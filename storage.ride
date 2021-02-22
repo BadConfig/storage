@@ -35,7 +35,7 @@ let IMPACT = 0
 let REISSUE = 1
 let assetId = toBytes("asdf")
 let nebulaAddress = addressFromString("nebula addr")
-let a = 163799999999999
+let a = 11099999999999 
 let c = 21000000
 
 func mint(last: Int, new: Int) = {
